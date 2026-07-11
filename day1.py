@@ -1,0 +1,1 @@
+print("Day 1 of Python basics assignment is live!")

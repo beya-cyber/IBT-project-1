@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tazi Security Academy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <style>
+    :root{--bg:#020b08;--panel:#041612;--neon:#00ff9c;--soft:rgba(0,255,156,.25);--text:#e7fff5;--muted:#9adfbe;--warn:#ffcc00}
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui}
+    body{background:var(--bg);color:var(--text);}
+    header{padding:20px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(0,255,156,.15);}
+    .logo{font-family:Orbitron,monospace;color:var(--neon);font-weight:800;font-size:1.6rem;}
+    nav a{color:var(--muted);margin-left:18px;text-decoration:none;font-size:1rem;}
+    nav a:hover{color:var(--neon);}
+    section{max-width:1200px;margin:auto;padding:60px 32px;}
+    h1,h2,h3{font-family:Orbitron,monospace;color:var(--neon);margin-bottom:20px;}
+    .btn{padding:10px 20px;border-radius:10px;background:var(--neon);color:#020b08;text-decoration:none;font-weight:600;margin-top:10px;display:inline-block;}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-top:24px;}
+    .card{background:var(--panel);border-radius:15px;padding:24px;box-shadow:0 0 12px rgba(0,255,156,.15);transition:0.3s;cursor:pointer;}
+    .card:hover{box-shadow:0 0 20px var(--neon);transform:scale(1.03);}
+    .hidden{display:none;}
+    .login-container, .dashboard-container, .register-container{max-width:700px;margin:60px auto;background:var(--panel);padding:32px;border-radius:18px;box-shadow:0 0 12px rgba(0,255,156,.2);}
+    input, button, textarea{padding:10px 14px;margin:6px 0;border-radius:8px;border:1px solid rgba(0,255,156,.3);background:transparent;color:var(--text);width:100%}
+    button{background:var(--neon);color:#020b08;font-weight:600;cursor:pointer;}
+    iframe{width:100%;height:220px;border:none;border-radius:12px;margin-top:12px;}
+    .link-btn{background:none;border:none;color:var(--neon);cursor:pointer;text-decoration:underline;padding:0;font-size:1rem;}
+    .notice{background:var(--panel);padding:16px;border-radius:12px;margin-top:16px;font-size:0.9rem;line-height:1.4;}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">TAZI SECURITY ACADEMY</div>
+  <nav>
+    <a href="#login" onclick="showLogin()">Login</a>
+    <a href="#dashboard" onclick="showDashboard()">Dashboard</a>
+    <a href="#register" onclick="showRegister()">Register</a>
+    <a href="#payment" onclick="showPayment()">Payment</a>
+    <button class="link-btn" onclick="toggleLang()">EN / አማ</button>
+  </nav>
+</header>
+
+<section class="login-container" id="loginPage">
+  <h2>Login</h2>
+  <input type="text" id="username" placeholder="Username" />
+  <input type="password" id="password" placeholder="Password" />
+  <button onclick="login()">Login</button>
+  <p id="loginMsg"></p>
+  <p>Don't have an account? <button class="link-btn" onclick="showRegister()">Register here</button></p>
+</section>
+
+<section class="register-container hidden" id="registerPage">
+  <h2>Create Account</h2>
+  <input type="text" id="newUsername" placeholder="Username" />
+  <input type="email" id="newEmail" placeholder="Email" />
+  <button onclick="register()">Register</button>
+  <p id="registerMsg"></p>
+  <div class="notice">
+    <strong>Privacy & Security Notice:</strong> Only username and email are collected. Passwords are hashed in the backend. Accounts require manual approval for Phase‑1.
+  </div>
+  <p>Already have an account? <button class="link-btn" onclick="showLogin()">Login here</button></p>
+</section>
+
+<section class="dashboard-container hidden" id="dashboardPage">
+  <h2 id="dashTitle">Welcome to Tazi Security Academy</h2>
+  <p id="dashSub">Select a course to start learning:</p>
+  <div class="grid" id="courseGrid"></div>
+</section>
+
+<section class="hidden" id="paymentPage">
+  <h2>Payment</h2>
+  <p>Send 1500 ETB to Telebirr +251953908677 and upload screenshot for verification.</p>
+</section>
+
+<script>
+  emailjs.init('Ccn0CNpUH9VQ-zoGp');
+  let paidUser = false;
+  let lang = 'en';
+
+  let courses = [
+    {titleEN:'Linux Fundamentals', titleAM:'የሊኑክስ መሠረቶች', locked:true, video:'', notes:''},
+    {titleEN:'Python Basics', titleAM:'ፓይቶን መሠረት', locked:false, video:'https://www.youtube.com/embed/rfscVS0vtbw', notes:'https://example.com/python.pdf'},
+    {titleEN:'Penetration Testing', titleAM:'የመረጃ ጥናት', locked:true, video:'', notes:''},
+    {titleEN:'Red Team Operations', titleAM:'መደበኛ ቡድን እና ምርመራ', locked:true, video:'', notes:''}
+  ];
+
+  function renderCourses(){
+    const grid = document.getElementById('courseGrid');
+    grid.innerHTML='';
+    courses.forEach(c=>{
+      const card=document.createElement('div');
+      card.className='card';
+      card.innerHTML=`<h3>${lang==='en'?c.titleEN:c.titleAM}</h3>`+
+        (paidUser || !c.locked?`<p style='color:lime'>Unlocked ✅</p>`:`<p style='color:red'>Locked – Payment required 🔒</p>`);
+      if(paidUser || !c.locked){
+        if(c.video) card.innerHTML+=`<iframe src='${c.video}'></iframe>`;
+        if(c.notes) card.innerHTML+=`<a href='${c.notes}' target='_blank' class='btn'>Download Notes</a>`;
+      }
+      grid.appendChild(card);
+    });
+  }
+
+  function toggleLang(){
+    lang = lang==='en'?'am':'en';
+    document.getElementById('dashTitle').innerText = lang==='en'?'Welcome to Tazi Security Academy':'እንኳን ወደ ታዚ ሳይበር አካዳሚ በደህና መጡ';
+    document.getElementById('dashSub').innerText = lang==='en'?'Select a course to start learning':'ኮርስ ይምረጡ';
+    renderCourses();
+  }
+
+  function showLogin(){hideAll();loginPage.classList.remove('hidden');}
+  function showRegister(){hideAll();registerPage.classList.remove('hidden');}
+  function showDashboard(){hideAll();dashboardPage.classList.remove('hidden');renderCourses();}
+  function showPayment(){hideAll();paymentPage.classList.remove('hidden');}
+
+  function hideAll(){
+    loginPage.classList.add('hidden');
+    registerPage.classList.add('hidden');
+    dashboardPage.classList.add('hidden');
+    paymentPage.classList.add('hidden');
+  }
+
+  function login(){
+    // Backend login API should verify hashed passwords
+    paidUser = true; // Change only after backend payment verification
+    showDashboard();
+  }
+
+  function register(){
+    emailjs.send('service_uydt598','template_0agjnjw',{
+      username:newUsername.value,
+      email:newEmail.value,
+      message:'New registration',
+      to_email:'btechacker24@gmail.com'
+    });
+    alert('Registered! Await manual verification.');
+    showLogin();
+  }
+
+  renderCourses();
+</script>
+
+</body>
+</html>
