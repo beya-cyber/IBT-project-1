@@ -1,0 +1,7 @@
+#object = A "bundle" of related attributes (variables) and methods (functions)
+#               you need a class to create many objects
+#Classes is a blue print of an object what it look like and how it should function
+#if you have small program may be better writing your class in your main module
+#But if its large program 
+
+
