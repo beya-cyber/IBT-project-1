@@ -1,6 +1,4 @@
 #This is a simple implementation of a Addis Bank account class in Python. The class has an owner, account number, and balance. The balance is a private attribute, and it can be accessed through the statement property. The deposit method allows adding funds to the account, while the withdraw method allows removing funds, with checks for sufficient balance.
-
-
 class Account:
     def __init__(self, owner, account_no, balance):
         self.owner = owner
