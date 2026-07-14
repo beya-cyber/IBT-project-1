@@ -2,6 +2,7 @@
 #               you need a class to create many objects
 #Classes is a blue print of an object what it look like and how it should function
 #if you have small program may be better writing your class in your main module
-#But if its large program 
+#But if its large program you may might consider to write it your class in different module
+
 
 
