@@ -1,0 +1,14 @@
+ls
+# Exclude database & text notes
+fraud_reports.db
+note.txt
+*.pdf
+
+# Exclude extra drafts
+latest app.py
+latest app2.py
+script.py
+build_manual.py
+Insa_project.py
+cisco_project.py
+psych.py

@@ -1,5 +1,5 @@
 # =====================================================================
-# PART 1: THE BASE CLASS (Your original Account class, updated)
+# PART 1: THE BASE CLASS 
 # =====================================================================
 class Account:
     def __init__(self, owner, account_no, balance):
@@ -33,7 +33,7 @@ class Account:
 
 
 # =====================================================================
-# PART 2: THE SAVINGS ACCOUNT CLASS (Step 2 of your slide)
+# PART 2: THE SAVINGS ACCOUNT CLASS 
 # =====================================================================
 # Putting (Account) in parentheses means SavingsAccount inherits everything from Account
 class SavingsAccount(Account):
@@ -55,7 +55,7 @@ class SavingsAccount(Account):
 
 
 # =====================================================================
-# PART 3: THE CURRENT ACCOUNT CLASS (Step 3 of your slide)
+# PART 3: THE CURRENT ACCOUNT CLASS 
 # =====================================================================
 class CurrentAccount(Account):
     def __init__(self, owner, account_no, balance, overdraft):
@@ -79,7 +79,7 @@ class CurrentAccount(Account):
 
 
 # =====================================================================
-# PART 4: POLYMORPHIC LOOP (Step 5 of your slide)
+# PART 4: POLYMORPHIC LOOP 
 # =====================================================================
 if __name__ == "__main__":
     # Create a mixed list containing one instance of each type of account
