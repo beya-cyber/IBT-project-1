@@ -1,0 +1,45 @@
+lass Vehicle(ABC):
+    def __init__(self, make, model):
+        self.make = make
+        self.model = model
+
+    def describe(self):
+        print(f"Vehicle: {self.make} {self.model} ({self.wheels()} wheels)")
+
+    # 5. Abstract Method
+    @abstractmethod
+    def wheels(self):
+        pass
+
+
+# Subclass 1: Car
+class Car(Vehicle):
+    def wheels(self):
+        return 4
+
+
+# Subclass 2: Truck (2. super(), 3. Override)
+class Truck(Vehicle):
+    def __init__(self, make, model, capacity):
+        super().__init__(make, model)
+        self.capacity = capacity
+
+    def wheels(self):
+        return 6
+
+    def describe(self):
+        print(f"Truck: {self.make} {self.model} ({self.wheels()} wheels) - Capacity: {self.capacity} tons")
+
+
+# 4. Polymorphism Test
+if __name__ == "__main__":
+    fleet = [
+        Car("Toyota", "Corolla"),
+        Truck("Isuzu", "NPR", 5),
+        Car("Hyundai", "Elantra"),
+        Truck("Volvo", "FH16", 20)
+    ]
+
+    print("--- Vehicle Fleet ---")
+    for vehicle in fleet:
+        vehicle.describe()

@@ -1,11 +1,9 @@
-# =====================================================================
-# PART 1: THE BASE CLASS 
-# =====================================================================
+
 class Account:
     def __init__(self, owner, account_no, balance):
         self.owner = owner
         self.account_no = account_no
-        # 💡 We changed "__balance" to "_balance" (single underscore).
+        #  We changed "__balance" to "_balance" (single underscore).
         # This tells Python it is "protected" so our child classes can access it.
         self._balance = balance
 
@@ -14,7 +12,7 @@ class Account:
         """A helper property to read the balance value if needed."""
         return self._balance
 
-    # 💡 Step 4: Base statement layout
+    
     @property
     def statement(self):
         return f"Standard Account | Owner: {self.owner} | No: {self.account_no} | Balance: ${self._balance:.2f}"
@@ -32,9 +30,6 @@ class Account:
         self._balance -= amount
 
 
-# =====================================================================
-# PART 2: THE SAVINGS ACCOUNT CLASS 
-# =====================================================================
 # Putting (Account) in parentheses means SavingsAccount inherits everything from Account
 class SavingsAccount(Account):
     def __init__(self, owner, account_no, balance, rate):
@@ -48,21 +43,19 @@ class SavingsAccount(Account):
         self.deposit(interest)  # We can call the parent's deposit method directly!
         print(f"Added ${interest:.2f} interest to Savings Account {self.account_no}")
 
-    # 💡 Step 4: Overriding the statement property to label it as Savings Account
+    # Overriding the statement property to label it as Savings Account
     @property
     def statement(self):
         return f"Savings Account  | Owner: {self.owner} | No: {self.account_no} | Balance: ${self._balance:.2f} (Interest Rate: {self.rate * 100:.1f}%)"
 
 
-# =====================================================================
-# PART 3: THE CURRENT ACCOUNT CLASS 
-# =====================================================================
+#CurrentAccount inherits from Account
 class CurrentAccount(Account):
     def __init__(self, owner, account_no, balance, overdraft):
         super().__init__(owner, account_no, balance)
         self.overdraft = overdraft  # Allowed negative limit (e.g., 500.00)
 
-    # 💡 Step 3: Overriding the withdraw method to allow overdraft limits
+    #  Overriding the withdraw method to allow overdraft limits
     def withdraw(self, amount):
         if amount <= 0:
             raise ValueError("Withdrawal amount must be positive")
@@ -72,15 +65,12 @@ class CurrentAccount(Account):
         
         self._balance -= amount
 
-    # 💡 Step 4: Overriding the statement property to label it as Current Account
+    # Overriding the statement property to label it as Current Account
     @property
     def statement(self):
         return f"Current Account  | Owner: {self.owner} | No: {self.account_no} | Balance: ${self._balance:.2f} (Overdraft Limit: ${self.overdraft:.2f})"
 
-
-# =====================================================================
-# PART 4: POLYMORPHIC LOOP 
-# =====================================================================
+#Polymorphic loop demonstration
 if __name__ == "__main__":
     # Create a mixed list containing one instance of each type of account
     accounts_list = [

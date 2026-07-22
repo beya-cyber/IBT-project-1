@@ -1,28 +1,39 @@
-#Transaction log reader
+def load_stock(filename):
+    """Read stock from file into a dictionary using try/except."""
+    stock = {}
+    try:
+        with open(filename, "r") as f:
+            for line in f:
+                if "," in line:
+                    item, qty = line.strip().split(",")
+                    stock[item.strip()] = int(qty.strip())
+        print(f"[+] Loaded stock from {filename}")
+    except FileNotFoundError:
+        print(f"[!] Warning: {filename} not found. Starting with empty stock.")
+    return stock
 
-def load_transactions(filename="telebirr transactions.txt"):
-    customer_totals = {}
+def save_stock(stock, filename):
+    """Save dictionary stock back to the text file."""
+    with open(filename, "w") as f:
+        for item, qty in stock.items():
+            f.write(f"{item},{qty}\n")
+    print(f"[+] Saved updated stock to {filename}")
 
-    with open(filename, "r") as file:
-        for line in file:
-            line = line.strip()
-            if not line:
-                continue  # skip blank lines
+def adjust(stock, item, amount):
+    """Increase or decrease an item's stock quantity."""
+    stock[item] = stock.get(item, 0) + amount
+    print(f"[->] Adjusted {item} by {amount}. New total: {stock[item]}")
 
-            customer, amount = line.split(",")
-            amount = float(amount)
+# --- Execution Flow ---
+if __name__ == "__main__":
+    # 1. Load existing stock from file
+    stock = load_stock(FILE_PATH)
 
-            # Add to total (uses dict.get to handle new or existing customers)
-            customer_totals[customer] = (
-                customer_totals.get(customer, 0) + amount
-            )
+    # 2. Update stock quantities
+    adjust(stock, "Amoxicillin", 10)  # Restock (+10)
+    adjust(stock, "Paracetamol", -20) # Sale (-20)
+    adjust(stock, "Aspirin", 15)      # New item (+15)
 
-    return customer_totals
-
-
-# Load and display results
-totals = load_transactions()
-
-print("--- TELEBIRR TRANSACTION SUMMARY ---")
-for customer, total in totals.items():
-    print(f"Customer: {customer} | Total: {total} Birr")
+    # 3. Report low-stock items (< 10) using list comprehension
+    low_stock = [item for item, qty in stock.items() if qty < 10]
+    print("\nLow Stock Items (<10 units):", low_stock)
